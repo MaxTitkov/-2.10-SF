@@ -51,10 +51,10 @@ ES.onmessage = message => {
 	
 	console.log(`Dogs - ${dogsVotesPersent}% (${voteRes.dogs})\nCats - ${catsVotesPersent}% (${voteRes.cats})\nParrots - ${parrotsVotesPersent}% (${voteRes.parrots})`);
 	
-	$('.dogs-pg').css('width', `${dogsVotesPersent}%`).attr('aria-valuenow', dogsVotesPersent).text(`Собаки - ${dogsVotesPersent}%`);
+	$('.dogs-pg').css('width', `${dogsVotesPersent}%`).attr('aria-valuenow', dogsVotesPersent).text(`Dogs - ${dogsVotesPersent}%`);
 
-	$('.cats-pg').css('width', `${catsVotesPersent}%`).attr('aria-valuenow', catsVotesPersent).text(`Кошки - ${catsVotesPersent}%`);
+	$('.cats-pg').css('width', `${catsVotesPersent}%`).attr('aria-valuenow', catsVotesPersent).text(`Cats - ${catsVotesPersent}%`);
 
-	$('.parrots-pg').css('width', `${parrotsVotesPersent}%`).attr('aria-valuenow', parrotsVotesPersent).text(`Попугаи - ${parrotsVotesPersent}%`);
+	$('.parrots-pg').css('width', `${parrotsVotesPersent}%`).attr('aria-valuenow', parrotsVotesPersent).text(`Parrots - ${parrotsVotesPersent}%`);
 }
 	
