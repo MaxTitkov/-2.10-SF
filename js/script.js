@@ -1,3 +1,17 @@
+// SW-SOURCE
+const progressSW = document.querySelector(".progress-bar-sw")
+
+// console.log("%O", progressSW)
+
+const cats_progress_sw = document.querySelector("#cats-sw")
+const dogs_progress_sw = document.querySelector("#dogs-sw")
+const parrots_progress_sw = document.querySelector("#parrots-sw")
+
+const headerSw = new Headers({
+	'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Origin': '*'
+})
+
 const urlSw = new URL('https://sf-pyw.mosyag.in/sse/vote/stats')
 
 const ES_SW = new EventSource(urlSw, headerSw)
