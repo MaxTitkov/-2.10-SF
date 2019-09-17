@@ -1,41 +1,60 @@
-// SW-SOURCE
-const progressSW = document.querySelector(".progress-bar-sw")
+$('.vote-result-message').hide();
 
-// console.log("%O", progressSW)
+$('.results-diagram').hide();
 
-const cats_progress_sw = document.querySelector("#cats-sw")
-const dogs_progress_sw = document.querySelector("#dogs-sw")
-const parrots_progress_sw = document.querySelector("#parrots-sw")
+$('.results').click(() => {
+	$('.results-diagram').show();
+	$('.vote-result-message').hide();
+});
 
-const headerSw = new Headers({
-	'Access-Control-Allow-Credentials': true,
+$('.dogs').click(() => {
+	postVote('dogs');
+})
+
+$('.cats').click(() => {
+	postVote('cats');
+})
+
+$('.parrots').click(() => {
+	postVote('parrots');
+})
+
+function postVote(pet) {
+	$.post(`https://sf-pyw.mosyag.in//sse/vote/${pet}`, function(data){
+		if(data.message == "Ok"){
+			console.log(data.message)
+			$('.vote-result-message').show();	
+		}
+	});
+
+	$('.vote-form').hide();
+}
+
+const header = new Headers({
+    'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Origin': '*'
 })
 
-const urlSw = new URL('https://sf-pyw.mosyag.in/sse/vote/stats')
+const url = new URL('https://sf-pyw.mosyag.in/sse/vote/stats')
 
-const ES_SW = new EventSource(urlSw, headerSw)
+const ES = new EventSource(url, header)
 
-ES_SW.onerror = error => {
-	ES_SW.readyState ? progress.textContent = "Some arror occured": null;
+ES.onerror = error => {
+    ES.readyState ? $('.results-diagram').html("<h3>Server Error</h3>") : null;
 }
 
-ES_SW.onmessage = message => {
-	data = JSON.parse(message.data)
-	let allVotes =  data["cats"] + data["dogs"] + data["parrots"]
-
-	let catsVotesPercent = (data["cats"]/allVotes)*100
-	let dogsVotesPercent = (data["dogs"]/allVotes)*100
-	let parrotsVotesPercent = (data["parrots"]/allVotes)*100
-
-	cats_progress_sw.style.cssText = `width: ${catsVotesPercent}%;`
-    cats_progress_sw.textContent = `Cats: ${Math.round(catsVotesPercent)}%`
-    
-    dogs_progress_sw.style.cssText = `width: ${dogsVotesPercent}%;`
-    dogs_progress_sw.textContent = `Dogs: ${Math.round(dogsVotesPercent)}%`
-    
-    parrots_progress_sw.style.cssText = `width: ${parrotsVotesPercent}%;`
-    parrots_progress_sw.textContent = `Parrots: ${Math.round(parrotsVotesPercent)}%`
+ES.onmessage = message => {
+	voteRes = JSON.parse(message.data)
+	dogsVotesPersent =  (voteRes.dogs * 100/(voteRes.dogs + voteRes.cats + voteRes.parrots)).toFixed(2);
+	catsVotesPersent =  (voteRes.cats * 100/(voteRes.dogs + voteRes.cats + voteRes.parrots)).toFixed(2);
+	parrotsVotesPersent =  (voteRes.parrots * 100/(voteRes.dogs + voteRes.cats + voteRes.parrots)).toFixed(2);
 	
-	console.log(allVotes)
+	console.log(`Dogs - ${dogsVotesPersent}% (${voteRes.dogs})\nCats - ${catsVotesPersent}% (${voteRes.cats})\nParrots - ${parrotsVotesPersent}% (${voteRes.parrots})`);
+	
+	$('.dogs-pg').css('width', `${dogsVotesPersent}%`).attr('aria-valuenow', dogsVotesPersent).text(`Собаки - ${dogsVotesPersent}%`);
+
+	$('.cats-pg').css('width', `${catsVotesPersent}%`).attr('aria-valuenow', catsVotesPersent).text(`Кошки - ${catsVotesPersent}%`);
+
+	$('.parrots-pg').css('width', `${parrotsVotesPersent}%`).attr('aria-valuenow', parrotsVotesPersent).text(`Попугаи - ${parrotsVotesPersent}%`);
 }
+	
